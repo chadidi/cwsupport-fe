@@ -1,75 +1,79 @@
 <template>
-  <v-layout column justify-center align-center>
-    <v-flex xs12 sm8 md6>
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
+  <div>
+    <div class="blue py-12 white--text">
+      <div class="font-weight-bold display-2 mb-5 text-center">
+        Customer Web Support
       </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>
-            Vuetify is a progressive Material Design component framework for
-            Vue.js. It was designed to empower developers to create amazing
-            applications.
-          </p>
-          <p>
-            For more information on Vuetify, check out the
-            <a href="https://vuetifyjs.com" target="_blank"> documentation </a>.
-          </p>
-          <p>
-            If you have questions, please join the official
-            <a href="https://chat.vuetifyjs.com/" target="_blank" title="chat">
-              discord </a
-            >.
-          </p>
-          <p>
-            Find a bug? Report it on the github
-            <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              title="contribute"
-            >
-              issue board </a
-            >.
-          </p>
-          <p>
-            Thank you for developing with Vuetify and I look forward to bringing
-            more exciting features in the future.
-          </p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3" />
-          <a href="https://nuxtjs.org/" target="_blank">
-            Nuxt Documentation
-          </a>
-          <br />
-          <a href="https://github.com/nuxt/nuxt.js" target="_blank">
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire">
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-layout>
+      <v-container class="mb-6">
+        <v-row justify="center" no-gutters>
+          <v-col cols="12" lg="4" md="8" sm="8">
+            <div class="text-center">
+              The application name above didn't meant to make sense nor this
+              description cause this is just a demo. you can log in as a user:
+              user@cwsupport.com | secret or as an admin: admin@cwsupport.com |
+              secret
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
+    <v-container>
+      <v-row class="mt-n12" justify="center" no-gutters>
+        <v-col cols="12" lg="4" md="8" sm="8">
+          <v-card class="pb-2">
+            <v-tabs grow>
+              <v-tab>login</v-tab>
+              <v-tab>new account</v-tab>
+              <v-tab-item>
+                <div class="pa-6">
+                  <v-form>
+                    <v-text-field dense outlined label="email" />
+                    <v-text-field
+                      class="pa-0"
+                      dense
+                      outlined
+                      label="password"
+                    />
+                    <v-checkbox dense label="remember me"></v-checkbox>
+                    <v-btn class="white--text" block color="blue" depressed
+                      >login</v-btn
+                    >
+                  </v-form>
+                </div>
+              </v-tab-item>
+              <v-tab-item>
+                <div class="pa-6">
+                  <v-form>
+                    <v-text-field dense outlined label="full name" />
+                    <v-text-field dense outlined label="email" />
+                    <v-text-field
+                      class="pa-0"
+                      dense
+                      outlined
+                      label="password"
+                    />
+                    <v-text-field
+                      class="pa-0"
+                      dense
+                      outlined
+                      label="password confirmation"
+                    />
+                    <v-btn class="white--text" block color="blue" depressed
+                      >register</v-btn
+                    >
+                  </v-form>
+                </div>
+              </v-tab-item>
+            </v-tabs>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
-export default {
-  components: {
-    Logo,
-    VuetifyLogo
-  }
-}
+export default {};
 </script>
+
+<style></style>
