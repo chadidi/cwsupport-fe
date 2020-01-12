@@ -35,5 +35,6 @@ export const actions = {
     app
   }) {
     await dispatch('auth/fetchUser')
+    await dispatch('Customer/Issues/fetch')
   }
 }
