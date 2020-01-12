@@ -1,0 +1,28 @@
+mutation updateIssue(
+  $id: ID!
+  $title: String!
+  $description: String!
+  $status: IssueStatus!
+  $tags: [String!]!
+) {
+  updateIssue(
+    id: $id
+    title: $title
+    description: $description
+    status: $status
+    tags: $tags
+  ) {
+    id
+    title
+    description
+    status
+    created_at
+    user {
+      name
+      email
+    }
+    tags {
+      name
+    }
+  }
+}
