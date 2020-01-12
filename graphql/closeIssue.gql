@@ -1,0 +1,12 @@
+mutation closeIssue($id: ID!) {
+  closeIssue(id: $id) {
+    id
+    title
+    description
+    status
+    created_at
+    tags {
+      name
+    }
+  }
+}
