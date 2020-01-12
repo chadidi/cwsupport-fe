@@ -26,16 +26,27 @@
               <v-tab>new account</v-tab>
               <v-tab-item>
                 <div class="pa-6">
-                  <v-form>
-                    <v-text-field dense outlined label="email" />
+                  <v-form @submit.prevent="login">
                     <v-text-field
+                      v-model="credentials.email"
+                      dense
+                      outlined
+                      label="email"
+                    />
+                    <v-text-field
+                      v-model="credentials.password"
                       class="pa-0"
                       dense
                       outlined
                       label="password"
                     />
                     <v-checkbox dense label="remember me"></v-checkbox>
-                    <v-btn class="white--text" block color="blue" depressed
+                    <v-btn
+                      type="submit"
+                      class="white--text"
+                      block
+                      color="blue"
+                      depressed
                       >login</v-btn
                     >
                   </v-form>
@@ -73,7 +84,47 @@
 </template>
 
 <script>
-export default {};
+import login from "@/graphql/login.gql";
+
+export default {
+  data() {
+    return {
+      isAuthenticated: false,
+      submitting: false,
+      error: null,
+      credentials: {
+        email: "",
+        password: ""
+      },
+    };
+  },
+  mounted() {
+    this.isAuthenticated = !!this.$apolloHelpers.getToken();
+  },
+  methods: {
+    async login() {
+      this.submitting = true;
+      const credentials = this.credentials;
+      try {
+        const res = await this.$apollo
+          .mutate({
+            mutation: login,
+            variables: credentials
+          })
+          .then(({ data }) => data && data.login);
+        await this.$apolloHelpers.onLogin(res.access_token, undefined, {
+          expires: 7
+        });
+        this.isAuthenticated = true;
+        this.$router.push("/customer");
+      } catch (e) {
+        console.error(e);
+        this.error = e;
+      }
+      this.submitting = false;
+    },
+  },
+    };
 </script>
 
 <style></style>
