@@ -18,8 +18,8 @@
           <v-btn depressed @click="cancel">
             cancel
           </v-btn>
-          <v-btn depressed @click="create" class="white--text" color="green">
-            create
+          <v-btn depressed @click="submit" class="white--text" color="green">
+            submit
           </v-btn>
         </div>
       </v-form>
@@ -29,6 +29,7 @@
 
 <script>
 import { mapState } from "vuex";
+import submitIssue from "@/graphql/submitIssue.gql";
 
 export default {
   data() {
@@ -52,12 +53,24 @@ export default {
       this.issue.description = "";
       this.issue.tags = [];
     },
-    create() {
-      this.$store.commit("Customer/Issues/UNSHIFT", {
-        ...this.issue,
-        status: "SUBMITTED"
-      });
-      this.cancel();
+    async submit() {
+      this.submitting = true;
+      const issue = this.issue;
+      try {
+        const res = await this.$apollo
+          .mutate({
+            mutation: submitIssue,
+            variables: issue
+          })
+          .then(({ data }) => data && data.submitIssue);
+        this.$store.commit("Customer/Issues/UNSHIFT", res);
+        this.cancel();
+      } catch (e) {
+        console.error(e);
+        this.error = e;
+      }
+
+      this.submitting = false;
     }
   }
 };

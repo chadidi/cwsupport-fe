@@ -28,12 +28,14 @@
         <div>
           <template v-if="issue.tags.length">
             <template v-for="(tag, index) in issue.tags">
-              <v-chip small class="mr-2 mt-2" :key="index">{{ tag }}</v-chip>
+              <v-chip small class="mr-2 mt-2" :key="index">{{
+                tag.name
+              }}</v-chip>
             </template>
           </template>
         </div>
-        <template v-if="issue.status !== 'closed'">
-          <v-btn depressed>
+        <template v-if="issue.status !== 'CLOSED'">
+          <v-btn depressed @click.prevent="closeIssue(issue.id)">
             mark as closed
           </v-btn>
         </template>
@@ -43,18 +45,41 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import closeIssue from "@/graphql/closeIssue.gql";
+
 export default {
   props: ["issue"],
   data() {
     return {
-      expanded: false,
-      status: {
-        SUBMITTED: { color: "blue", icon: "mdi-checkbox-marked-circle" },
-        IN_PROGRESS: { color: "orange", icon: "mdi-clock" },
-        RESOLVED: { color: "green", icon: "mdi-checkbox-marked-circle" },
-        CLOSED: { color: "red", icon: "mdi-lock" }
-      }
+      expanded: false
     };
+  },
+  computed: {
+    ...mapState({
+      status: state => state.status
+    })
+  },
+  methods: {
+    async closeIssue(id) {
+      this.submitting = true;
+      console.log(id);
+      try {
+        const res = await this.$apollo
+          .mutate({
+            mutation: closeIssue,
+            variables: {
+              id: id
+            }
+          })
+          .then(({ data }) => data && data.closeIssue);
+        this.issue = res;
+      } catch (e) {
+        console.error(e);
+        this.error = e;
+      }
+      this.submitting = false;
+    }
   }
 };
 </script>

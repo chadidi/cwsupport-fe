@@ -19,13 +19,21 @@
                 style="cursor: pointer"
               >
                 <td>{{ issue.id }}</td>
-                <td
-                  class="font-weight-bold"
-                  :class="`${status[issue.status].color}--text`"
-                >
-                  {{ issue.status }}
+                <td>
+                  <v-chip
+                    :color="status[issue.status].color"
+                    text-color="white"
+                    class="mr-2"
+                  >
+                    <v-avatar left>
+                      <v-icon>{{ status[issue.status].icon }}</v-icon>
+                    </v-avatar>
+                    {{ status[issue.status].name }}
+                  </v-chip>
                 </td>
-                <td style="width: 100%">{{ issue.title }}</td>
+                <td style="width: 100%" class="font-weight-bold">
+                  {{ issue.title }}
+                </td>
               </tr>
             </tbody>
           </template>
@@ -46,34 +54,47 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import gql from "graphql-tag";
+
 export default {
-  data() {
-    return {
-      issues: [
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" },
-        { id: "123", status: "SUBMITTED", title: "hello i have an issue" }
-      ],
-      status: {
-        SUBMITTED: { color: "blue" },
-        IN_PROGRESS: { color: "orange" },
-        RESOLVED: { color: "green" },
-        CLOSED: { color: "red" }
-      }
-    };
+  computed: {
+    ...mapState({
+      status: state => state.status
+    })
+  },
+  async asyncData({ app }) {
+    const client = app.apolloProvider.defaultClient;
+    const issues = await client
+      .query({
+        prefetch: true,
+        query: gql`
+          query {
+            issues(
+              count: 100
+              orderBy: [{ field: "created_at", order: DESC }]
+            ) {
+              paginatorInfo {
+                total
+                hasMorePages
+              }
+              data {
+                id
+                title
+                description
+                status
+                created_at
+                tags {
+                  name
+                }
+              }
+            }
+          }
+        `
+      })
+      .then(({ data }) => data && data.issues && data.issues.data);
+
+    return { issues };
   },
   methods: {
     goTo(issue) {

@@ -8,6 +8,9 @@ export const state = () => ({
 export const mutations = {
   SET_USER(state, data) {
     state.user = data
+  },
+  SET_AUTH(state, value) {
+    state.isAuthenticated = value
   }
 }
 
@@ -27,6 +30,7 @@ export const actions = {
               me {
                 name
                 email
+                is_admin
               }
             }
           `
@@ -35,7 +39,8 @@ export const actions = {
       }) => data);
       console.log(res);
       if (res) {
-        commit('SET_USER', res)
+        commit('SET_USER', res.me)
+        commit('SET_AUTH', true)
       }
     }
   }

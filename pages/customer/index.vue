@@ -32,7 +32,8 @@ export default {
   },
   computed: {
     ...mapState({
-      issues: state => state.Customer.Issues.issues
+      issues: state => state.Customer.Issues.issues,
+      status: state => state.status
     })
   },
   methods: {

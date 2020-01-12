@@ -9,9 +9,12 @@
           <v-col cols="12" lg="4" md="8" sm="8">
             <div class="text-center">
               The application name above didn't meant to make sense nor this
-              description cause this is just a demo. you can log in as a user:
-              user@cwsupport.com | secret or as an admin: admin@cwsupport.com |
-              secret
+              description cause this is just a demo.
+              <hr />
+              you can log in as a user: user@cwsupport.com | secret or as an
+              admin: admin@cwsupport.com | secret
+              <hr />
+              for the full experience login as an admin
             </div>
           </v-col>
         </v-row>
@@ -123,9 +126,6 @@ export default {
       }
     };
   },
-  mounted() {
-    this.isAuthenticated = !!this.$apolloHelpers.getToken();
-  },
   methods: {
     async login() {
       this.submitting = true;
@@ -140,13 +140,18 @@ export default {
         await this.$apolloHelpers.onLogin(res.access_token, undefined, {
           expires: 7
         });
-        this.isAuthenticated = true;
-        this.$router.push("/customer");
+        await this.$store.dispatch("auth/fetchUser");
+        await this.$store.dispatch("Customer/Issues/fetch");
       } catch (e) {
         console.error(e);
         this.error = e;
       }
       this.submitting = false;
+      if (this.$store.state.auth.user.is_admin) {
+        this.$router.push("/admin");
+      } else {
+        this.$router.push("/customer");
+      }
     },
     async register() {
       this.submitting = true;
@@ -161,13 +166,18 @@ export default {
         await this.$apolloHelpers.onLogin(res.access_token, undefined, {
           expires: 7
         });
-        this.isAuthenticated = true;
-        this.$router.push("/customer");
+        await this.$store.dispatch("auth/fetchUser");
+        await this.$store.dispatch("Customer/Issues/fetch");
       } catch (e) {
         console.error(e);
         this.error = e;
       }
       this.submitting = false;
+      if (this.$store.state.auth.user.is_admin) {
+        this.$router.push("/admin");
+      } else {
+        this.$router.push("/customer");
+      }
     }
   }
 };
