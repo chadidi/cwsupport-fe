@@ -42,6 +42,7 @@
                       dense
                       outlined
                       label="password"
+                      type="password"
                     />
                     <v-checkbox dense label="remember me"></v-checkbox>
                     <v-btn
@@ -76,6 +77,7 @@
                       dense
                       outlined
                       label="password"
+                      type="password"
                     />
                     <v-text-field
                       v-model="newUser.password_confirmation"
@@ -83,6 +85,7 @@
                       dense
                       outlined
                       label="password confirmation"
+                      type="password"
                     />
                     <v-btn
                       type="submit"
