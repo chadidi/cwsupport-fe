@@ -1,0 +1,16 @@
+mutation submitIssue(
+  $title: String!
+  $description: String!
+  $tags: [String!]!
+) {
+  submitIssue(title: $title, description: $description, tags: $tags) {
+    id
+    title
+    description
+    status
+    created_at
+    tags {
+      name
+    }
+  }
+}
