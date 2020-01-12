@@ -26,16 +26,27 @@
               <v-tab>new account</v-tab>
               <v-tab-item>
                 <div class="pa-6">
-                  <v-form>
-                    <v-text-field dense outlined label="email" />
+                  <v-form @submit.prevent="login">
                     <v-text-field
+                      v-model="credentials.email"
+                      dense
+                      outlined
+                      label="email"
+                    />
+                    <v-text-field
+                      v-model="credentials.password"
                       class="pa-0"
                       dense
                       outlined
                       label="password"
                     />
                     <v-checkbox dense label="remember me"></v-checkbox>
-                    <v-btn class="white--text" block color="blue" depressed
+                    <v-btn
+                      type="submit"
+                      class="white--text"
+                      block
+                      color="blue"
+                      depressed
                       >login</v-btn
                     >
                   </v-form>
@@ -43,22 +54,39 @@
               </v-tab-item>
               <v-tab-item>
                 <div class="pa-6">
-                  <v-form>
-                    <v-text-field dense outlined label="full name" />
-                    <v-text-field dense outlined label="email" />
+                  <v-form @submit.prevent="register">
                     <v-text-field
+                      v-model="newUser.name"
+                      dense
+                      outlined
+                      label="full name"
+                    />
+                    <v-text-field
+                      v-model="newUser.email"
+                      dense
+                      outlined
+                      label="email"
+                    />
+                    <v-text-field
+                      v-model="newUser.password"
                       class="pa-0"
                       dense
                       outlined
                       label="password"
                     />
                     <v-text-field
+                      v-model="newUser.password_confirmation"
                       class="pa-0"
                       dense
                       outlined
                       label="password confirmation"
                     />
-                    <v-btn class="white--text" block color="blue" depressed
+                    <v-btn
+                      type="submit"
+                      class="white--text"
+                      block
+                      color="blue"
+                      depressed
                       >register</v-btn
                     >
                   </v-form>
@@ -73,7 +101,74 @@
 </template>
 
 <script>
-export default {};
-</script>
+import login from "@/graphql/login.gql";
+import register from "@/graphql/register.gql";
 
-<style></style>
+export default {
+  middleware: "isGuest",
+  data() {
+    return {
+      isAuthenticated: false,
+      submitting: false,
+      error: null,
+      credentials: {
+        email: "",
+        password: ""
+      },
+      newUser: {
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: ""
+      }
+    };
+  },
+  mounted() {
+    this.isAuthenticated = !!this.$apolloHelpers.getToken();
+  },
+  methods: {
+    async login() {
+      this.submitting = true;
+      const credentials = this.credentials;
+      try {
+        const res = await this.$apollo
+          .mutate({
+            mutation: login,
+            variables: credentials
+          })
+          .then(({ data }) => data && data.login);
+        await this.$apolloHelpers.onLogin(res.access_token, undefined, {
+          expires: 7
+        });
+        this.isAuthenticated = true;
+        this.$router.push("/customer");
+      } catch (e) {
+        console.error(e);
+        this.error = e;
+      }
+      this.submitting = false;
+    },
+    async register() {
+      this.submitting = true;
+      const newUser = this.newUser;
+      try {
+        const res = await this.$apollo
+          .mutate({
+            mutation: register,
+            variables: newUser
+          })
+          .then(({ data }) => data && data.register);
+        await this.$apolloHelpers.onLogin(res.access_token, undefined, {
+          expires: 7
+        });
+        this.isAuthenticated = true;
+        this.$router.push("/customer");
+      } catch (e) {
+        console.error(e);
+        this.error = e;
+      }
+      this.submitting = false;
+    }
+  }
+};
+</script>

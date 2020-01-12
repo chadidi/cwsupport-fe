@@ -13,6 +13,9 @@
           <v-icon left>mdi-plus-circle</v-icon>
           create issue
         </v-btn>
+        <v-btn @click.prevent="logout" class="white--text" color="red">
+          <v-icon left>mdi-location-exit</v-icon>
+        </v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-container>
@@ -24,14 +27,31 @@
 
 <script>
 import createIssueModal from "~/components/Customer/createIssueModal";
+import logout from "@/graphql/logout.gql";
 
 export default {
+  middleware: "isAuth",
   components: {
     createIssueModal
   },
   methods: {
     openCreateModal() {
       this.$store.commit("Customer/Issues/SET_CREATE_MODAL_VISIBILITY", true);
+    },
+    async logout() {
+      try {
+        const res = await this.$apollo
+          .mutate({
+            mutation: logout
+          })
+          .then(({ data }) => data && data.logout);
+        console.log(res);
+        await this.$apolloHelpers.onLogout();
+        this.$router.push("/");
+      } catch (e) {
+        console.error(e);
+        this.error = e;
+      }
     }
   }
 };
