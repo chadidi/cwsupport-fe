@@ -1,3 +1,4 @@
+require("dotenv").config()
 import colors from "vuetify/es5/util/colors";
 
 export default {
@@ -56,7 +57,7 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: process.env.BACKEND_URL || "http://cwsupport.me/graphql"
+        httpEndpoint: process.env.BACKEND_URL || "https://cwsupport.fevrok.dev/graphql"
       }
     }
   },
@@ -65,6 +66,14 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {},
+  /*
+   ** nuxt.js server options
+   ** (can be overrided by environment variables)
+   */
+  server: {
+    port: process.env.APP_PORT,
+    // host: "0.0.0.0"
+  },
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
