@@ -1,4 +1,4 @@
-require("dotenv").config()
+require("dotenv").config();
 import colors from "vuetify/es5/util/colors";
 
 export default {
@@ -9,7 +9,8 @@ export default {
   head: {
     titleTemplate: "%s - " + process.env.npm_package_name,
     title: process.env.npm_package_name || "",
-    meta: [{
+    meta: [
+      {
         charset: "utf-8"
       },
       {
@@ -22,11 +23,13 @@ export default {
         content: process.env.npm_package_description || ""
       }
     ],
-    link: [{
-      rel: "icon",
-      type: "image/x-icon",
-      href: "/favicon.ico"
-    }]
+    link: [
+      {
+        rel: "icon",
+        type: "image/x-icon",
+        href: "/favicon.ico"
+      }
+    ]
   },
   /*
    ** Customize the progress-bar color
@@ -51,13 +54,14 @@ export default {
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    "@nuxtjs/axios",
-    '@nuxtjs/apollo'
+    // "@nuxtjs/axios",
+    "@nuxtjs/apollo"
   ],
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: process.env.BACKEND_URL || "https://cwsupport.fevrok.dev/graphql"
+        httpEndpoint:
+          process.env.BACKEND_URL || "https://cwsupport.fevrok.dev/graphql"
       }
     }
   },
@@ -65,13 +69,13 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  // axios: {},
   /*
    ** nuxt.js server options
    ** (can be overrided by environment variables)
    */
   server: {
-    port: process.env.APP_PORT,
+    port: process.env.APP_PORT
     // host: "0.0.0.0"
   },
   /*
